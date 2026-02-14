@@ -1,9 +1,14 @@
 class Cloudsh < Formula
   desc "Your servers, any device — self-hosted terminal access"
   homepage "https://cloudsh.io"
-  url "https://github.com/JongoDB/cloudsh/archive/v0.4.0.tar.gz"
-  sha256 "272205625dea622baa0926604b5f1d6eabd03576677e3388460a32329c14f8e4"
+  url "https://github.com/JongoDB/cloudsh/archive/v0.6.0.tar.gz"
+  sha256 "0019dfc4b32d63c1392aa264aed2253c1e0c2fb09216f8e2cc269bbfb8bb49b5"
   license "MIT"
+
+  livecheck do
+    url :stable
+    strategy :github_latest
+  end
 
   depends_on "python@3.12"
   depends_on "tmux"
