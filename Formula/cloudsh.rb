@@ -1,8 +1,8 @@
 class Cloudsh < Formula
   desc "Your servers, any device — self-hosted terminal access"
   homepage "https://cloudsh.io"
-  url "https://github.com/JongoDB/cloudsh/archive/v0.7.6.tar.gz"
-  sha256 "a552537ca21def7d0aca1b10765605b5e5a10900b619fc81c9e2b4dc19e110f9"
+  url "https://github.com/JongoDB/cloudsh/archive/v0.7.7.tar.gz"
+  sha256 "ee48c8e029e37b4e4ebf1f25a219c6c63b30acf26699a20fd75378fa269f86e0"
   license "MIT"
 
   livecheck do
