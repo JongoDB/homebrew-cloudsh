@@ -12,7 +12,6 @@ class Cloudsh < Formula
 
   depends_on "python@3.12"
   depends_on "tmux"
-  depends_on "node@20" => :build
 
   def install
     # Set up Python virtual environment
@@ -25,19 +24,9 @@ class Cloudsh < Formula
       system venv / "bin" / "pip", "install", "--no-cache-dir", "."
     end
 
-    # Build client
-    system "npm", "ci", "--ignore-scripts"
-    cd "packages/client" do
-      system "npm", "run", "build"
-    end
-
-    # Install built client for static serving
-    (libexec / "client").install Dir["packages/client/dist/*"]
-
     # Create wrapper script
     (bin / "cloudsh").write <<~EOS
       #!/bin/bash
-      export CLOUDSH_STATIC_DIR="#{libexec}/client"
       exec "#{libexec}/venv/bin/cloudsh" "$@"
     EOS
   end
@@ -51,6 +40,8 @@ class Cloudsh < Formula
 
       Check status:
         cloudsh status
+
+      Open https://app.cloudsh.io to connect.
 
       For Cloudflare tunnel support (remote access):
         brew install cloudflare/cloudflare/cloudflared
