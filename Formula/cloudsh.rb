@@ -5,6 +5,11 @@ class Cloudsh < Formula
   sha256 "65717dc5d5863ea27767ee62f65b2a8dbe63c88238cb0116c8fef998e262edfc"
   license "MIT"
 
+  # The cryptography package contains a Rust-compiled .abi3.so whose Mach-O
+  # header is too small for Homebrew's dylib-ID rewrite.  Skipping relocation
+  # for the entire venv avoids the "Failed changing dylib ID" error.
+  skip_clean "libexec"
+
   livecheck do
     url :stable
     strategy :github_latest
