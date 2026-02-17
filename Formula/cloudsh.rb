@@ -10,6 +10,7 @@ class Cloudsh < Formula
     strategy :github_latest
   end
 
+  depends_on "cloudflare/cloudflare/cloudflared"
   depends_on "python@3.12"
   depends_on "tmux"
 
@@ -49,8 +50,7 @@ class Cloudsh < Formula
 
       Open https://app.cloudsh.io to connect.
 
-      For Cloudflare tunnel support (remote access):
-        brew install cloudflare/cloudflare/cloudflared
+      Remote access is enabled by default via Cloudflare tunnels.
     EOS
   end
 
