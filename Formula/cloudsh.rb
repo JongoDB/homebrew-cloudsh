@@ -5,11 +5,6 @@ class Cloudsh < Formula
   sha256 "65717dc5d5863ea27767ee62f65b2a8dbe63c88238cb0116c8fef998e262edfc"
   license "MIT"
 
-  # The cryptography package contains a Rust-compiled .abi3.so whose Mach-O
-  # header is too small for Homebrew's dylib-ID rewrite.  Skipping relocation
-  # for the entire venv avoids the "Failed changing dylib ID" error.
-  skip_clean "libexec"
-
   livecheck do
     url :stable
     strategy :github_latest
@@ -19,21 +14,27 @@ class Cloudsh < Formula
   depends_on "tmux"
 
   def install
-    # Set up Python virtual environment
-    venv = libexec / "venv"
-    system "python3.12", "-m", "venv", venv.to_s
-
-    # Install Python dependencies and package
-    cd "packages/server" do
-      system venv / "bin" / "pip", "install", "--no-cache-dir", "-r", "requirements.txt"
-      system venv / "bin" / "pip", "install", "--no-cache-dir", "."
-    end
+    # Stage the server source for post_install (pip install happens there
+    # to avoid Homebrew's dylib-ID rewrite on cryptography's Rust .abi3.so)
+    (libexec / "src").install Dir["packages/server/*"]
 
     # Create wrapper script
     (bin / "cloudsh").write <<~EOS
       #!/bin/bash
       exec "#{libexec}/venv/bin/cloudsh" "$@"
     EOS
+  end
+
+  def post_install
+    # Build venv and pip-install in post_install so Homebrew's relocator
+    # never touches the cryptography .abi3.so shared library.
+    venv = libexec / "venv"
+    system "python3.12", "-m", "venv", venv.to_s
+
+    cd libexec / "src" do
+      system venv / "bin" / "pip", "install", "--no-cache-dir", "-r", "requirements.txt"
+      system venv / "bin" / "pip", "install", "--no-cache-dir", "."
+    end
   end
 
   def caveats
