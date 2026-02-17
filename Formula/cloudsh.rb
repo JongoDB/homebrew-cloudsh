@@ -19,9 +19,10 @@ class Cloudsh < Formula
     # to avoid Homebrew's dylib-ID rewrite on cryptography's Rust .abi3.so)
     (libexec / "src").install Dir["packages/server/*"]
 
-    # Create wrapper script
+    # Create wrapper script (PATH ensures launchd services find Homebrew deps)
     (bin / "cloudsh").write <<~EOS
       #!/bin/bash
+      export PATH="#{HOMEBREW_PREFIX}/bin:#{HOMEBREW_PREFIX}/sbin:$PATH"
       exec "#{libexec}/venv/bin/cloudsh" "$@"
     EOS
   end
@@ -60,6 +61,9 @@ class Cloudsh < Formula
     working_dir var / "cloudsh"
     log_path var / "log" / "cloudsh.log"
     error_log_path var / "log" / "cloudsh.log"
+    setup_service do
+      (var / "cloudsh").mkpath
+    end
   end
 
   test do
