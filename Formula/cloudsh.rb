@@ -37,6 +37,8 @@ class Cloudsh < Formula
       system venv / "bin" / "pip", "install", "--no-cache-dir", "-r", "requirements.txt"
       system venv / "bin" / "pip", "install", "--no-cache-dir", "."
     end
+
+    (var / "cloudsh").mkpath
   end
 
   def caveats
@@ -61,9 +63,6 @@ class Cloudsh < Formula
     working_dir var / "cloudsh"
     log_path var / "log" / "cloudsh.log"
     error_log_path var / "log" / "cloudsh.log"
-    setup_service do
-      (var / "cloudsh").mkpath
-    end
   end
 
   test do
